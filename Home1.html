@@ -1,58 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Heart Health Predictor</title>
-    <link rel="stylesheet" href="../static/Home1.css" />
-    <link rel="stylesheet" href="static/css/style.css">
-  </head>
-  <body>
-    <header>
-      <h1>Heart Health Predictor</h1>
-      <nav>
-        <a href="Symptoms.html">Symptoms</a>
-        <a href="Index1.html">🧠 Start Prediction</a>
-        <a href="Contacts.html">Contacts</a>
-      </nav>
-    </header>
 
-    <section class="home">
-      <img src="../static/image.png" alt="Heart Health" />
-      <h2>Predict and Prevent Heart Attacks & Cardiac Arrest</h2>
-      <p>
-        Early detection can save lives. Use our intelligent system to assess
-        your risk.
-      </p>
-    </section>
+<head>
+    <meta charset="UTF-8">
+    <title>CardioGuard | AI Heart Health Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <section class="content">
-      <div class="box">
-        <h3>About the Project</h3>
-        <p>
-          This system uses health indicators and machine learning to detect
-          early signs of heart problems.
-        </p>
-      </div>
-      <div class="box">
-        <h3>Heart Attack vs Cardiac Arrest</h3>
-        <p>
-          Heart attack is a circulation issue, while cardiac arrest is an
-          electrical one. Know the difference to act fast.
-        </p>
-      </div>
-      <div class="box">
-        <h3>Warning Signs</h3>
-        <p>
-          Chest pain, fatigue, shortness of breath, and irregular heartbeat can
-          be early warnings. Don't ignore them.
-        </p>
-      </div>
-    </section>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <div class="footer">
-      &copy; 2025 Heart Health Predictor. All rights reserved.
-      <p>Stay healthy ❤️ — 2025</p>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+
+    <!-- Global Premium Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 sticky-top">
+        <a class="navbar-brand text-white" href="{{ url_for('home') }}">❤️ CardioGuard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('symptoms') }}">Symptoms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('prediction_page') }}">New Prediction</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('contacts') }}">Top Doctors</a>
+                </li>
+                {% if session.get('user_id') %}
+                <li class="nav-item">
+                    <a class="nav-link text-warning fw-bold" href="{{ url_for('dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger fw-bold" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link fw-bold" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-info fw-bold" href="{{ url_for('register') }}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
     </div>
-  </body>
+
+    <!-- Hero Section -->
+    <section class="hero overflow-hidden">
+        <div class="container">
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6 fade-in-up">
+                    <h1 class="display-4 fw-bold">AI-Driven <span class="text-gradient">Heart Health</span> Intelligence</h1>
+                    <p class="lead text-muted mb-4">
+                        CardioGuard leverages state-of-the-art XGBoost machine learning to analyze clinical 
+                        biomarkers. Detect risks before they become emergencies.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ url_for('prediction_page') }}" class="btn btn-premium">
+                            Start Free Assessment <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        {% if not session.get('user_id') %}
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-primary border-4 rounded-pill px-4 fw-bold" style="padding-top: 10px;">
+                            Sign Up
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-5 d-flex gap-4">
+                        <div class="small fw-bold"><i class="fas fa-check-circle text-success me-2"></i> 92% Accuracy</div>
+                        <div class="small fw-bold"><i class="fas fa-user-shield text-primary me-2"></i> Data Encrypted</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 text-center fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="position-relative">
+                        <div class="position-absolute top-50 start-50 translate-middle rounded-circle bg-danger opacity-10" style="width: 120%; height: 120%; filter: blur(50px);"></div>
+                        <img src="{{ url_for('static', filename='heart-health.png') }}" alt="Heart Health" class="img-fluid rounded-4 shadow-lg position-relative">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="container py-5">
+        <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold">Why Trust CardioGuard?</h2>
+            <p class="text-muted">Built on scientific research and high-performance algorithms.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.1s;">
+                <div class="glass-card text-center h-100">
+                    <div class="info-icon-wrapper">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h4>Powered by XGBoost</h4>
+                    <p class="text-muted">
+                        Utilizing gradient boosting for high-precision 
+                        cardiovascular event prediction.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="glass-card text-center h-100">
+                    <div class="info-icon-wrapper">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Real-time Results</h4>
+                    <p class="text-muted">
+                        Get instant feedback on your 10-year heart risk 
+                        percentage with actionable advice.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 fade-in-up" style="animation-delay: 0.3s;">
+                <div class="glass-card text-center h-100">
+                    <div class="info-icon-wrapper">
+                        <i class="fas fa-shield-heart"></i>
+                    </div>
+                    <h4>Secure Records</h4>
+                    <p class="text-muted">
+                        Track your progress over time with our encrypted 
+                        personal health dashboard.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-5">
+        <div class="container">
+            <div class="mb-4">
+                <h4 class="text-white">❤️ CardioGuard</h4>
+                <p class="text-muted small">Advanced AI solutions for predictive heart healthcare.</p>
+            </div>
+            <div class="border-top border-secondary pt-4">
+                🩺 Final Year Machine Learning Project © 2026 | Built with Flask & XGBoost
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
 </html>

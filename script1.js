@@ -1,22 +1,25 @@
-const age = document.getElementById("age").value;
+document.addEventListener("DOMContentLoaded", function () {
 
-if (!age || parseInt(age) <= 0) {
-  alert("Please enter a valid age before continuing.");
-  return;
-}
-document.getElementById("predictForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+  const form = document.getElementById("predictForm");
+  const ageInput = document.getElementById("age");
+  const button = document.getElementById("predictBtn");
 
-  const age = document.getElementById("age").value;
+  if (form) {
+    form.addEventListener("submit", function (e) {
 
-  if (!age || parseInt(age) <= 0) {
-    alert("Please enter a valid age before continuing.");
-    return;
+      const age = parseInt(ageInput.value);
+
+      // Validate age
+      if (!age || age <= 0 || age > 120) {
+        e.preventDefault();
+        alert("Please enter a valid age between 1 and 120.");
+        return;
+      }
+
+      // Show loading state
+      button.disabled = true;
+      button.textContent = "⏳ Analyzing...";
+    });
   }
 
-  window.location.href = "predict.html";
 });
-const button = document.querySelector("button[type='submit']");
-button.textContent = "Redirecting...";
-button.disabled = true;
-

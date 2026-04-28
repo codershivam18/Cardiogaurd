@@ -1,29 +1,45 @@
-body {
+/* ==============================
+   GLOBAL RESET
+============================== */
+* {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #f4f7fa;
-  color: #333;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+/* ==============================
+   ROOT VARIABLES (CardioGuard Theme)
+============================== */
+:root {
+  --primary: #b71c1c;
+  --primary-light: #e53935;
+  --secondary: #1565c0;
+  --dark: #263238;
+  --background: #f4f7fa;
+  --text: #333;
+  --white: #ffffff;
+}
+
+/* ==============================
+   BODY
+============================== */
+body {
+  background: linear-gradient(135deg, #f5f7fa, #e3f2fd);
+  color: var(--text);
   overflow-x: hidden;
 }
 
+/* ==============================
+   HEADER / NAVBAR
+============================== */
 header {
-  background: linear-gradient(135deg, #e53935, #d32f2f);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: var(--white);
   padding: 2rem 1rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  animation: slideDown 3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.8s ease-out;
 }
 
 nav {
@@ -31,44 +47,36 @@ nav {
 }
 
 nav a {
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   margin: 0 15px;
-  font-weight: bold;
-  transition: color 0.3s;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: 0.3s ease;
 }
 
 nav a:hover {
-  background-color: whitesmoke;
-  border: 1px solid whitesmoke;
-  color: black;
-  border-radius: 15%;
+  background: rgba(255, 255, 255, 0.2);
 }
 
+/* ==============================
+   HERO SECTION
+============================== */
 .home {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  animation: fadeIn 3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  text-align: center;
+  padding: 3rem 1rem;
+  animation: fadeIn 1.2s ease-in-out;
 }
 
 .home img {
-  max-width: 300px;
+  max-width: 320px;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  transition: transform 0.5s ease;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  transition: 0.4s ease;
 }
 
 .home img:hover {
@@ -76,100 +84,94 @@ nav a:hover {
 }
 
 .home h2 {
-  margin-top: 1rem;
-  font-size: 2rem;
-  color: #d32f2f;
+  margin-top: 1.5rem;
+  font-size: 2.2rem;
+  color: var(--primary);
+  font-weight: 700;
 }
 
+/* ==============================
+   CONTENT GRID
+============================== */
 .content {
-  padding: 2rem;
+  padding: 3rem 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .box {
-  background: #fff;
-  border-radius: 15px;
-  padding: 1.5rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 1.8rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.4s ease;
 }
 
 .box:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
 }
 
 .box h3 {
-  color: #b71c1c;
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
+/* ==============================
+   FOOTER
+============================== */
 .footer {
   text-align: center;
-  padding: 1rem;
-  background: #263238;
-  color: white;
-  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--dark);
+  color: #bbb;
+  margin-top: 3rem;
   font-size: 0.9rem;
 }
+
+/* ==============================
+   ANIMATIONS
+============================== */
+@keyframes slideDown {
+  from {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
 @media (max-width: 768px) {
-  header {
-    padding: 1.5rem 1rem;
-  }
-
   .home h2 {
-    font-size: 1.5rem;
-  }
-
-  .content {
-    padding: 1rem;
-    gap: 1.2rem;
+    font-size: 1.6rem;
   }
 
   nav a {
-    margin: 0 10px;
+    margin: 0 8px;
     font-size: 0.9rem;
   }
 
-  .box {
-    padding: 1rem;
+  .content {
+    padding: 2rem 1rem;
   }
-}
-nav a:focus {
-  outline: 3px solid #ffebee;
-  outline-offset: 2px;
-}
-nav a,
-.box,
-.home img {
-  transition: all 0.3s ease;
-}
-:root {
-  --primary-red: #d32f2f;
-  --deep-red: #b71c1c;
-  --header-gradient: linear-gradient(135deg, #e53935, #d32f2f);
-  --bg-gray: #f4f7fa;
-  --footer-bg: #263238;
-}
-
-body {
-  background: var(--bg-gray);
-  color: #333;
-}
-
-header {
-  background: var(--header-gradient);
-}
-
-.home h2 {
-  color: var(--primary-red);
-}
-
-.box h3 {
-  color: var(--deep-red);
-}
-
-.footer {
-  background: var(--footer-bg);
 }

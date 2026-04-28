@@ -1,45 +1,51 @@
-document.getElementById("predictForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
 
-  const age = parseInt(document.getElementById("age").value);
-  const cholesterol = parseInt(document.getElementById("cholesterol").value);
-  const bp = parseInt(document.getElementById("bp").value);
-  const hr = parseInt(document.getElementById("hr").value);
-  const resultDiv = document.getElementById("result");
+  const form = document.getElementById("predictForm");
+  const submitBtn = document.getElementById("predictBtn");
+  const currentSmokerSelect = document.getElementById("currentSmoker");
+  const cigsPerDayInput = document.getElementById("cigsPerDay");
 
-  // Input validation
-  if (isNaN(age) || isNaN(cholesterol) || isNaN(bp) || isNaN(hr)) {
-    resultDiv.textContent = "❌ Please fill out all fields correctly.";
-    resultDiv.style.color = "black";
-    return;
+  // Dynamic logic for Cigarettes Per Day
+  if (currentSmokerSelect && cigsPerDayInput) {
+    currentSmokerSelect.addEventListener("change", function () {
+      if (this.value === "no") {
+        cigsPerDayInput.value = "0";
+        cigsPerDayInput.setAttribute("readonly", true);
+        cigsPerDayInput.style.backgroundColor = "#e9ecef";
+      } else {
+        cigsPerDayInput.value = "";
+        cigsPerDayInput.removeAttribute("readonly");
+        cigsPerDayInput.style.backgroundColor = "";
+      }
+    });
   }
 
-  // Reset
-  resultDiv.style.color = "";
-  resultDiv.style.fontWeight = "bold";
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      if (!form.checkValidity()) {
+        return; // Let browser show validation errors, don't lock the button
+      }
 
-  // Simple rule-based logic
-  let risk = 0;
-  if (age > 50) risk++;
-  if (cholesterol > 240) risk++;
-  if (bp > 140) risk++;
-  if (hr > 100) risk++;
+      // Merge script1.js age validation
+      const ageInput = document.getElementById("age");
+      if (ageInput) {
+        const age = parseInt(ageInput.value);
+        if (!age || age <= 0 || age > 120) {
+          e.preventDefault();
+          alert("Please enter a valid age between 1 and 120.");
+          return;
+        }
+      }
 
-  let prediction;
-  if (risk >= 3) {
-    prediction = "⚠️ High Risk of Heart Issue";
-    resultDiv.style.color = "red";
-  } else if (risk === 2) {
-    prediction = "⚠️ Moderate Risk";
-    resultDiv.style.color = "orange";
-  } else {
-    prediction = "✅ Low Risk";
-    resultDiv.style.color = "green";
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "⏳ Analyzing Risk...";
+
+      // Add slight delay effect (smooth UX)
+      setTimeout(() => {
+        submitBtn.innerHTML = "Generating Report...";
+      }, 500);
+    });
   }
 
-  resultDiv.textContent = prediction;
 });
-resultDiv.textContent = "⏳ Analyzing...";
-setTimeout(() => {
-  // logic and result here
-}, 800);

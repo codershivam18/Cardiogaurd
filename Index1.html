@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CardioGuard | Heart Risk Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+
+    <!-- Global Premium Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 sticky-top">
+        <a class="navbar-brand text-white" href="{{ url_for('home') }}">❤️ CardioGuard</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto text-center">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('symptoms') }}">Symptoms</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ url_for('prediction_page') }}">New Prediction</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('contacts') }}">Top Doctors</a></li>
+                {% if session.get('user_id') %}
+                <li class="nav-item"><a class="nav-link text-warning fw-bold" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link fw-bold" href="{{ url_for('login') }}">Login</a></li>
+                <li class="nav-item"><a class="nav-link text-info fw-bold" href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container py-5">
+        <div class="glass-card fade-in-up">
+
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold text-gradient">🩺 Heart Risk Assessment</h2>
+                <p class="text-muted">Fill in your clinical parameters for an AI-powered 10-year risk analysis.</p>
+            </div>
+
+            <form id="predictForm" action="{{ url_for('predict_route') }}" method="post">
+                
+                <!-- Section 1: Demographics & Lifestyle -->
+                <div class="form-section-title">
+                    <i class="fas fa-user-circle"></i> Demographics & Lifestyle
+                </div>
+                <div class="row g-4 mb-5">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Biological Sex</label>
+                        <select class="form-select" name="male" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Age (Years)</label>
+                        <input type="number" class="form-control" name="age" placeholder="e.g. 45" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Current Smoker?</label>
+                        <select class="form-select" name="currentSmoker" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Cigarettes Per Day</label>
+                        <input type="number" class="form-control" name="cigsPerDay" value="0" required>
+                    </div>
+                </div>
+
+                <!-- Section 2: Medical History -->
+                <div class="form-section-title">
+                    <i class="fas fa-history"></i> Medical History
+                </div>
+                <div class="row g-4 mb-5">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">On BP Medication?</label>
+                        <select class="form-select" name="BPMeds" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Prevalent Stroke?</label>
+                        <select class="form-select" name="prevalentStroke" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Hypertension?</label>
+                        <select class="form-select" name="prevalentHyp" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Diabetes?</label>
+                        <select class="form-select" name="diabetes" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section 3: Clinical Vitals -->
+                <div class="form-section-title">
+                    <i class="fas fa-heartbeat"></i> Clinical Vitals
+                </div>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Total Cholesterol (mg/dL)</label>
+                        <input type="number" class="form-control" name="totChol" placeholder="e.g. 200" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Systolic BP (mmHg)</label>
+                        <input type="number" class="form-control" name="sysBP" placeholder="e.g. 120" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Diastolic BP (mmHg)</label>
+                        <input type="number" class="form-control" name="diaBP" placeholder="e.g. 80" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">BMI (Body Mass Index)</label>
+                        <input type="number" step="0.01" class="form-control" name="BMI" placeholder="e.g. 24.5" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Heart Rate (bpm)</label>
+                        <input type="number" class="form-control" name="heartRate" placeholder="e.g. 72" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Glucose Level (mg/dL)</label>
+                        <input type="number" class="form-control" name="glucose" placeholder="e.g. 90" required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button type="submit" id="predictBtn" class="btn btn-premium w-100 py-3">
+                        <i class="fas fa-search-heart me-2"></i> Generate AI Health Report
+                    </button>
+                    <p class="small text-muted mt-3"><i class="fas fa-info-circle me-1"></i> Your data is processed securely and not shared with third parties.</p>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="mb-4">
+                <h4 class="text-white">❤️ CardioGuard</h4>
+                <p class="text-muted small">AI-Powered Preventive Cardiology Solutions.</p>
+            </div>
+            <div class="border-top border-secondary pt-4 text-muted small">
+                © 2026 CardioGuard AI | All Rights Reserved
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
